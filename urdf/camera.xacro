@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="anna">
+    <link
+        name="camera_mount">
+        <inertial>
+            <origin
+                xyz="0.0042092 0 0.0015"
+                rpy="0 0 0" />
+            <mass
+                value="0.0036152" />
+            <inertia
+                ixx="5.2515E-07"
+                ixy="0"
+                ixz="0"
+                iyy="3.1268E-07"
+                iyz="0"
+                izz="8.2871E-07" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera_mount.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                    rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera_mount.STL" />
+            </geometry>
+        </collision>
+    </link>
+
+    <joint
+        name="camera_mount_joint"
+        type="fixed">
+        <origin
+            xyz="0.10003 3.4296E-05 0.055"
+            rpy="0 0 0" />
+        <parent
+            link="chassis" />
+        <child
+            link="camera_mount" />
+        <axis
+            xyz="0 0 0" />
+        <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+    </joint>
+
+    <link
+        name="camera_hinge">
+        <inertial>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <mass
+                value="0.00022" />
+            <inertia
+                ixx="2.521270751976E-09"
+                ixy="0"
+                ixz="0"
+                iyy="2.521270751976E-09"
+                iyz="0"
+                izz="6.80456294703139E-10" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera_hinge.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                    rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera_hinge.STL" />
+            </geometry>
+        </collision>
+    </link>
+
+    <joint
+        name="camera_mount_to_hinge"
+        type="fixed">
+        <origin
+            xyz="0.0235 0 0.0015"
+            rpy="1.5708 0 0" />
+        <parent
+            link="camera_mount" />
+        <child
+            link="camera_hinge" />
+        <axis
+            xyz="0 0 0" />
+    </joint>
+
+    <link
+        name="camera_frame">
+        <inertial>
+            <origin
+                xyz="-0.0027 -0.0201858207235722 0"
+                rpy="0 0 0" />
+            <mass
+                value="0.004" />
+            <inertia
+                ixx="8.41847786919127E-07"
+                ixy="0"
+                ixz="0"
+                iyy="4.65403328847223E-07"
+                iyz="0"
+                izz="4.97218440111319E-07" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera_frame.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                    rgba="0.79 0.825 0.94 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://line_follow_robot_description/meshes/camera.STL" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="camera_link_optical">
+    </link>
+
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="camera_frame" />
+        <child link="camera_link_optical" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint
+        name="camera_revolute_joint"
+        type="revolute">
+        <origin
+            xyz="0.0235 0 0.0015"
+            rpy="1.5708 0 0" />
+        <parent
+            link="camera_mount" />
+        <child
+            link="camera_frame" />
+        <axis
+            xyz="0 0 1" />
+        <limit
+            lower="${camera_joint_lower_limit}"
+            upper="${camera_joint_upper_limit}"
+            effort="10"
+            velocity="10" />
+        <dynamics damping="0.1" friction="0.01" />
+    </joint>
+
+    <gazebo reference="camera_frame">
+        <material>
+            Gazebo/Green
+        </material>
+
+        <sensor type="camera" name="main_camera">
+            <pose>0.018 -0.0145 0 0 0 ${radians(12)}</pose> <!-- Change this-->
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <camera name="head">
+                <horizontal_fov>${radians(62.2)}</horizontal_fov>
+                <image>
+                    <width>1640</width>
+                    <height>1232</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.02</near>
+                    <far>200</far>
+                </clip>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </camera>
+            <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                <always_on>true</always_on>
+                <update_rate>0</update_rate>
+                <camera_name>anna/main_camera</camera_name>
+                <image_topic_name>image_raw</image_topic_name>
+                <camera_info_topic_name>camera_info</camera_info_topic_name>
+                <frame_name>camera_link_optical</frame_name>
+                <hack_baseline>0.07</hack_baseline>
+                <distortion_k1>0.0</distortion_k1>
+                <distortion_k2>0.0</distortion_k2>
+                <distortion_k3>0.0</distortion_k3>
+                <distortion_t1>0.0</distortion_t1>
+                <distortion_t2>0.0</distortion_t2>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>
