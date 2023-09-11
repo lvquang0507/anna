@@ -9,7 +9,7 @@ class CameraControl : public rclcpp::Node
 public:
     CameraControl() : Node("camera_control_node")
     {
-        this->declare_parameter("position", 0.0);
+        this->declare_parameter("position", -0.7);
         pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(TOPIC_NAME, 10);
         timer_ = this->create_wall_timer(500ms, std::bind(&CameraControl::timer_callback, this));
     }
