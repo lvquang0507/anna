@@ -162,7 +162,7 @@
     <joint name="camera_optical_joint" type="fixed">
         <parent link="camera_frame" />
         <child link="camera_link_optical" />
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.018 -0.0145 0" rpy="0 ${-pi/2} ${pi}" />
     </joint>
 
     <joint
@@ -191,24 +191,24 @@
         </material>
 
         <sensor type="camera" name="main_camera">
-            <pose>0.018 -0.0145 0 0 0 ${radians(12)}</pose> <!-- Change this-->
+            <pose>0.018 -0.0145 0 ${-pi/2} 0 ${radians(12)}</pose> <!-- Change this-->
             <update_rate>30</update_rate>
             <visualize>true</visualize>
             <camera name="head">
-                <horizontal_fov>${radians(62.2)}</horizontal_fov>
+                <horizontal_fov>1.089</horizontal_fov>
                 <image>
-                    <width>1640</width>
-                    <height>1232</height>
+                    <width>640</width>
+                    <height>480</height>
                     <format>R8G8B8</format>
                 </image>
                 <clip>
-                    <near>0.02</near>
-                    <far>200</far>
+                    <near>0.05</near>
+                    <far>8</far>
                 </clip>
                 <noise>
                     <type>gaussian</type>
                     <mean>0.0</mean>
-                    <stddev>0.01</stddev>
+                    <stddev>0.001</stddev>
                 </noise>
             </camera>
             <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
