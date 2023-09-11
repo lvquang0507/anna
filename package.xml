@@ -18,5 +18,7 @@
     <build_type>ament_cmake</build_type>
     <gazebo_ros
       gazebo_model_path="/home/lvquang/Desktop/ros2_ws/install/anna/share" />
+    <gazebo_ros
+      gazebo_model_path="/home/lvquang/Desktop/models" />
   </export>
 </package>
