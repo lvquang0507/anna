@@ -3,8 +3,7 @@
     <xacro:macro name="robot_wheel"
         params="wheel_prefix">
         <xacro:property name="wheel_radius" value="0.05" />
-        <xacro:property name="wheel_length"
-            value="0.025" />
+        <xacro:property name="wheel_length" value="0.025" />
 
         <!-- Front: 1; Rear: -1; Right: 1; Left: -1 -->
         <xacro:if value="${wheel_prefix == 'left_front'}">
